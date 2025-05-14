@@ -1,0 +1,13 @@
+namespace: "solstice"
+name: "cvalidator"
+version: "1.0.0"
+readme: "README.md"
+authors:
+    - "Solstice Staking AG"
+license:
+    - "MIT"
+tags:
+    - Staking
+    - Validator
+    - collection
+repository: "https://github.com/ssag-cs/solstice-crypto.git"

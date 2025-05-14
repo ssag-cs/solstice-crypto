@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  author: crypto-services
+  author: SolsticeSolana
   description: Ansible role to manage Solana nodes
-  company: Republic Crypto
+  company: Solstice Staking AG
   license: MIT
   min_ansible_version: 2.10.6
   platforms:
