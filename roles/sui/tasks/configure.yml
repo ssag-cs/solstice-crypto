@@ -1,0 +1,59 @@
+---
+- name: "Download Genesis Blob"
+  ansible.builtin.get_url:
+    url: "https://github.com/MystenLabs/sui-genesis/raw/main/{{ sui_network }}/genesis.blob"
+    dest: "{{ sui_data_dir }}/genesis.blob"
+    mode: "u+x,g+x"
+    owner: "{{ sui_username }}"
+
+- name: "Configure systemd service file"
+  ansible.builtin.template:
+    src: templates/service.j2
+    dest: "/etc/systemd/system/suid.service"
+    mode: "644"
+  notify: Restart suid service
+
+- name: Copy Base Configuration
+  become: true
+  become_user: "{{ sui_username }}"
+  ansible.builtin.copy:
+    src: "{{ sui_data_dir }}/git/sui/crates/sui-config/data/fullnode-template.yaml"
+    dest: "{{ sui_data_dir }}/releases/{{ sui_version }}/config.yaml"
+    remote_src: true
+    mode: "0644"
+
+- name: Update Configuration
+  ansible.builtin.include_role:
+    name: republic.infra.yaml_merge
+  vars:
+    yaml_merge_file: "{{ sui_data_dir }}/releases/{{ sui_version }}/config.yaml"
+    yaml_merge_input:
+      db-path: "{{ sui_data_dir }}/db/authorities_db"
+      genesis:
+        genesis-file-location: "{{ sui_data_dir }}/genesis.blob"
+      metrics-address: "{{ sui_metrics_bind_address }}:{{ sui_metrics_port }}"
+      json-rpc-address: "{{ sui_api_bind_address }}:{{ sui_rpc_port }}"
+
+- name: Update Configuration with peers
+  ansible.builtin.include_role:
+    name: republic.infra.yaml_merge
+  vars:
+    yaml_merge_file: "{{ sui_data_dir }}/releases/{{ sui_version }}/config.yaml"
+    yaml_merge_input:
+      p2p-config:
+        seed-peers:
+          - address: "{{ item.address }}"
+            peer-id: "{{ item.peer_id }}"
+  with_items: "{{ sui_seed_peers | selectattr('network', 'equalto', sui_network) | map(attribute='seeds') }}"
+
+- name: "Update Current Config Link"
+  become: true
+  become_user: "{{ sui_username }}"
+  ansible.builtin.file:
+    src: "{{ sui_data_dir }}/releases/{{ sui_version }}/config.yaml"
+    dest: "{{ sui_data_dir }}/config.yaml"
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    mode: "a+x"
+    state: link
+  notify: "Restart suid service"

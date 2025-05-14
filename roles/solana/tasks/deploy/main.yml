@@ -1,0 +1,55 @@
+---
+- name: Prepare service
+  block:
+    - name: Ensure service files exist
+      ansible.builtin.template:
+        src: solanad.service.j2
+        dest: /etc/systemd/system/solanad.service
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Stop service
+      changed_when: true
+      ansible.builtin.assert:
+        that:
+          - true
+      notify:
+        - Stop solanad
+
+- name: Ensure all notified handlers are run before proceeding
+  ansible.builtin.meta: flush_handlers
+
+- name: Deploy services
+  block:
+    - name: Remove existing links
+      ansible.builtin.file:
+        path: "/usr/bin/{{ item }}"
+        state: absent
+      loop:
+        - "{{ solana_validator_binary_prefix }}-validator"
+        - "{{ solana_validator_binary_prefix }}-ledger-tool"
+        - solana
+        - solana-keygen
+
+    - name: Create fresh links
+      ansible.builtin.file:
+        src: "{{ solana_data_dir }}/releases/{{ solana_version }}/{{ item }}"
+        dest: "/usr/bin/{{ item }}"
+        owner: "{{ solana_username }}"
+        mode: "0755"
+        state: link
+      loop:
+        - "{{ solana_validator_binary_prefix }}-validator"
+        - "{{ solana_validator_binary_prefix }}-ledger-tool"
+        - solana
+        - solana-keygen
+
+    - name: Start services
+      when: not solana_skip_start
+      changed_when: true
+      ansible.builtin.assert:
+        that:
+          - true
+      notify:
+        - Start solanad

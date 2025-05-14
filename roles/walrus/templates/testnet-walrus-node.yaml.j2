@@ -1,0 +1,35 @@
+---
+name: "{{ walrus_config_vars['name'] }}"
+storage_path: "{{ walrus_home_dir }}/db"
+protocol_key_pair:
+  path: "{{ walrus_home_dir }}/config/protocol.key"
+network_key_pair:
+  path: "{{ walrus_home_dir }}/config/tls/privkey.pem"
+public_host: "{{ walrus_config_vars['public_host'] }}"
+public_port: 9185
+metrics_address: 127.0.0.1:9184
+rest_api_address: 0.0.0.0:9185
+rest_graceful_shutdown_period_secs: 60
+sui:
+  rpc: https://mysten-rpc.testnet.sui.io:443
+  system_object: 0x6c2547cbbc38025cf3adac45f63cb0a8d12ecf777cdc75a4971612bf97fdf6af
+  staking_object: 0xbe46180321c30aab2f8b3501e24048377287fa708018a5b7c2792b35fe339ee3
+  event_polling_interval_millis: 400
+  wallet_config: "{{ walrus_home_dir }}/config/sui_config.yaml"
+  rpc_fallback_config:
+    checkpoint_bucket: https://checkpoints.testnet.sui.io/
+    quick_retry_config:
+      min_backoff_millis: 100
+      max_backoff_millis: 300
+      max_retries: null
+tls:
+  disable_tls: false
+  certificate_path: "{{ walrus_home_dir }}/config/tls/fullchain.pem"
+commission_rate: 6000
+voting_params:
+  storage_price: 150000
+  write_price: 25000
+  node_capacity: 500000000000
+metrics_push:
+  push_url: https://walrus-metrics-testnet.mystenlabs.com/publish/metrics
+storage_node_cap: "{{ walrus_config_vars['storage_node_cap'] }}"

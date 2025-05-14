@@ -1,0 +1,13 @@
+[Unit]
+Description=sui daemon
+After=network-online.target
+[Service]
+User={{ sui_username }}
+Group={{ sui_username }}
+WorkingDirectory={{ sui_data_dir }}
+ExecStart=/usr/local/bin/sui-node --config-path {{ sui_data_dir }}/config.yaml
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+[Install]
+WantedBy=multi-user.target

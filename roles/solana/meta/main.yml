@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: crypto-services
+  description: Ansible role to manage Solana nodes
+  company: Republic Crypto
+  license: MIT
+  min_ansible_version: 2.10.6
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - blockchain
+    - solana
+    - pyth
+dependencies: []

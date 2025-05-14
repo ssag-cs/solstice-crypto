@@ -1,0 +1,57 @@
+---
+- name: "Update package cache"
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: "Install package dependencies"
+  ansible.builtin.package:
+    name:
+      - curl
+      - jq
+
+- name: Check current binary exists
+  ansible.builtin.stat:
+    path: "{{ walrus_binary_path }}"
+  register: walrus_existing_binary_check
+
+- name: Backup current binary
+  ansible.builtin.copy:
+    remote_src: true
+    follow: true
+    src: "{{ walrus_binary_path }}"
+    dest: "{{ walrus_home_dir }}/releases/backup/walrus-node.bak.{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+    mode: "0755"
+  when: walrus_existing_binary_check.stat.exists
+
+- name: Download Binary
+  ansible.builtin.get_url:
+    url: "{{ walrus_binary_download_url }}"
+    dest: "{{ walrus_home_dir }}/releases/{{ walrus_version }}/walrus-node"
+    owner: "{{ walrus_username }}"
+    group: "{{ walrus_username }}"
+    force: true
+    mode: "0755"
+  register: binary_downloaded
+  notify:
+    - "Restart Walrus Service"
+
+- name: Link Binary # noqa: no-handler
+  ansible.builtin.file:
+    src: "{{ walrus_home_dir }}/releases/{{ walrus_version }}/walrus-node"
+    dest: "{{ walrus_binary_path }}"
+    owner: "{{ walrus_username }}"
+    group: "{{ walrus_username }}"
+    mode: "0755"
+    state: link
+    force: true
+  when: binary_downloaded.changed
+  notify:
+    - "Restart Walrus Service"
+
+- name: "Copy config file"
+  ansible.builtin.template:
+    src: "{{ walrus_network }}-walrus-node.yaml.j2"
+    dest: "{{ walrus_home_dir }}/config/walrus-node.yaml"
+    owner: "root"
+    group: "root"
+    mode: "0644"

@@ -1,0 +1,17 @@
+---
+- name: "Create directories"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: "directory"
+    owner: "{{ walrus_username }}"
+    group: "{{ walrus_username }}"
+    mode: "0755"
+    recurse: true
+  loop:
+    - "{{ walrus_home_dir }}"
+    - "{{ walrus_home_dir }}/db"
+    - "{{ walrus_home_dir }}/config"
+    - "{{ walrus_home_dir }}/config/tls"
+    - "{{ walrus_home_dir }}/releases"
+    - "{{ walrus_home_dir }}/releases/{{ walrus_version }}"
+    - "{{ walrus_home_dir }}/releases/backup"

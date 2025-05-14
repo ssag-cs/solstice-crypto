@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Republic
+  description: Ansible role to manage Walrus nodes
+  company: Republic
+  license: MIT
+  min_ansible_version: 2.10.6
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - blockchain
+    - walrus
+dependencies: []

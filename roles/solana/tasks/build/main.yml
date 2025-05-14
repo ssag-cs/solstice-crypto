@@ -1,0 +1,51 @@
+---
+- name: Build binaries
+  block:
+    - name: Clone the repository
+      become: true
+      become_user: "{{ solana_username }}"
+      ansible.builtin.git:
+        repo: "{{ solana_git_url }}"
+        dest: "{{ solana_data_dir }}/git"
+        clone: true
+        update: true
+        version: "{{ solana_version }}"
+
+    - name: Install solana-cli
+      become: true
+      become_user: "{{ solana_username }}"
+      ansible.builtin.command: bash -ilc 'curl -sSfL https://release.anza.xyz/{{ solana_version }}/install'
+      changed_when: true
+      when: solana_install_cli
+
+    - name: Build binaries
+      become: true
+      become_user: "{{ solana_username }}"
+      ansible.builtin.command: bash -ilc "{{ solana_data_dir }}/git/scripts/cargo-install-all.sh ."
+      args:
+        chdir: "{{ solana_data_dir }}/git"
+      changed_when: true
+
+    - name: Stage binaries
+      ansible.builtin.copy:
+        src: "{{ solana_data_dir }}/git/target/release/{{ item }}"
+        dest: "{{ solana_data_dir }}/releases/{{ solana_version }}/"
+        remote_src: true
+        owner: "{{ solana_username }}"
+        mode: "0755"
+      loop:
+        - "{{ solana_validator_binary_prefix }}-validator"
+        - "{{ solana_validator_binary_prefix }}-ledger-tool"
+        - solana
+        - solana-keygen
+
+- name: Link keygen (first install only)
+  when: should_init
+  block:
+    - name: Create link in path
+      ansible.builtin.file:
+        src: "{{ solana_data_dir }}/releases/{{ solana_version }}/solana-keygen"
+        dest: "/usr/bin/solana-keygen"
+        owner: "{{ solana_username }}"
+        mode: "0755"
+        state: link

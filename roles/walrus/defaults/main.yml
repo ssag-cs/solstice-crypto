@@ -1,0 +1,22 @@
+---
+walrus_username: "ubuntu"
+walrus_network: "testnet"
+walrus_home_dir: "/home/{{ walrus_username }}/walrus"
+walrus_version: "latest"
+walrus_binary_name: "walrus-node"
+walrus_binary_path: "/usr/bin/{{ walrus_binary_name }}"
+walrus_config_path: "{{ walrus_home_dir }}/config/walrus-node.yaml"
+walrus_binary_download_url: ""
+walrus_service_name: "walrusd.service"
+walrus_metrics_port: 9184
+walrus_rpc_port: 9185
+walrus_rpc_address: "https://fullnode.testnet.sui.io:443"
+walrus_config_vars:
+  name: "ExampleValidatorName"
+  public_host: "url.to.validator.example.com"
+  storage_node_cap: ""
+  metadata:
+    image_url: https://example.com/test.jpg
+    project_url: https://example.com
+    description: "Description goes here."
+    extra_fields: []

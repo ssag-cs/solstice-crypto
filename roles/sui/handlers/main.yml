@@ -1,0 +1,7 @@
+---
+- name: "Restart suid service"
+  ansible.builtin.systemd:
+    name: "suid"
+    state: restarted
+    daemon_reload: true
+    enabled: "{{ sui_daemon_enabled }}"

@@ -1,0 +1,61 @@
+---
+- name: Check network settings
+  ansible.builtin.assert:
+    that:
+      - solana_network == "mainnet" or solana_network == "testnet" or solana_network == "pyth"
+    fail_msg: "Invalid setting for 'solana_network'. Should be 'mainnet', 'testnet' or 'pyth'"
+
+- name: Check if validator binary is installed
+  ansible.builtin.stat:
+    path: "/usr/bin/{{ solana_validator_binary_prefix }}-validator"
+  register: current_binary_path
+
+- name: No binary found in PATH
+  when: not current_binary_path.stat.exists
+  ansible.builtin.set_fact:
+    should_update: true
+    should_build: true
+
+- name: Check if update is required
+  when: current_binary_path.stat.exists
+  block:
+    - name: Set current version from link
+      ansible.builtin.set_fact:
+        current_version: "{{ current_binary_path.stat.lnk_source | dirname | basename }}"
+
+    - name: Register if version change is required
+      ansible.builtin.set_fact:
+        should_update: "{{ current_version != solana_version or solana_force_update }}"
+
+- name: Check if desired version already available
+  when:
+    - should_update
+    - current_binary_path.stat.exists
+  block:
+    - name: Check if binary already exists for desired version
+      ansible.builtin.stat:
+        path: "{{ solana_data_dir }}/releases/{{ solana_version }}/{{ solana_validator_binary_prefix }}-validator"
+      register: target_binary
+
+    - name: Register if build is required
+      ansible.builtin.set_fact:
+        should_build: "{{ not target_binary.stat.exists or solana_force_update }}"
+
+- name: Check if first setup
+  block:
+    - name: Check if startup file exists
+      ansible.builtin.stat:
+        path: "{{ solana_data_dir }}/startup.sh"
+      register: startup_sh
+
+    - name: Register if initial setup is required
+      ansible.builtin.set_fact:
+        should_init: "{{ not startup_sh.stat.exists }}"
+
+- name: Preparing tasks
+  ansible.builtin.debug:
+    msg:
+      - "Update: {{ should_update }}"
+      - "Build: {{ should_build | default(false) }}"
+      - "Init: {{ should_init }}"
+      - "Restart: {{ (should_update or (should_build | default(false)) or should_init) and not solana_skip_start }}"

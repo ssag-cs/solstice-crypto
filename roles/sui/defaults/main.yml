@@ -1,0 +1,73 @@
+---
+# <sui_network> the project network to configure mainnet|testnet
+sui_network: "testnet"
+
+# <sui_use_pre_compile> whether to use a pre-compile or self compile.
+sui_use_pre_compile: false
+
+# <sui_update_configuration> update configuration safely defaulted to false
+sui_update_configuration: false
+
+# <sui_username> is the non-root user under which daemon will operate
+sui_username: "sui"
+
+# <sui_daemon_enabled> whether the daemon should be enabled or disabled
+sui_daemon_enabled: false
+
+# <sui_version> the version of sui that will be installed (git hash or git tag)
+sui_version: ""
+
+# <sui_data_dir> the location where chain data and configuration is stored
+sui_data_dir: "/home/{{ sui_username }}/.sui"
+
+# <sui_rpc_port> the rpc port to configure the node for
+sui_rpc_port: 9000
+
+# <sui_api_bind_address> the address to bind the RPC API to. Default loopback so no external exposure
+sui_api_bind_address: "127.0.0.1"
+
+# <sui_metrics_bind_address> the address to bind the metrics API to. Default loopback so no external exposure
+sui_metrics_bind_address: "127.0.0.1"
+
+# <sui_metrics_port> the metrics port to configure the node for
+sui_metrics_port: 9184
+
+# <sui_seed_peers> the seeds to configure the node for initial network connectivity. These are *testnet* by default. Mainnet ones are here: https://docs.sui.io/guides/operator/sui-full-node
+sui_seed_peers:
+  - network: "testnet"
+    seeds:
+      - address: /dns/nrt-tnt-ssfn-00.testnet.sui.io/udp/8084
+        peer_id: 23a1f7cd901b6277cbedaa986b3fc183f171d800cabba863d48f698f518967e1
+      - address: /dns/ewr-tnt-ssfn-00.testnet.sui.io/udp/8084
+        peer_id: df8a8d128051c249e224f95fcc463f518a0ebed8986bbdcc11ed751181fecd38
+      - address: /dns/lax-tnt-ssfn-00.testnet.sui.io/udp/8084
+        peer_id: f9a72a0a6c17eed09c27898eab389add704777c03e135846da2428f516a0c11d
+      - address: /dns/lhr-tnt-ssfn-00.testnet.sui.io/udp/8084
+        peer_id: 9393d6056bb9c9d8475a3cf3525c747257f17c6a698a7062cbbd1875bc6ef71e
+      - address: /dns/mel-tnt-ssfn-00.testnet.sui.io/udp/8084
+        peer_id: c88742f46e66a11cb8c84aca488065661401ef66f726cb9afeb8a5786d83456e
+  - network: "mainnet"
+    seeds:
+      - address: /dns/mel-00.mainnet.sui.io/udp/8084
+        peer_id: d32b55bdf1737ec415df8c88b3bf91e194b59ee3127e3f38ea46fd88ba2e7849
+      - address: /dns/ewr-00.mainnet.sui.io/udp/8084
+        peer_id: c7bf6cb93ca8fdda655c47ebb85ace28e6931464564332bf63e27e90199c50ee
+      - address: /dns/ewr-01.mainnet.sui.io/udp/8084
+        peer_id: 3227f8a05f0faa1a197c075d31135a366a1c6f3d4872cb8af66c14dea3e0eb66
+      - address: /dns/lhr-00.mainnet.sui.io/udp/8084
+        peer_id: c619a5e0f8f36eac45118c1f8bda28f0f508e2839042781f1d4a9818043f732c
+      - address: /dns/sui-mainnet-ssfn-1.nodeinfra.com/udp/8084
+        peer_id: 0c52ca8d2b9f51be4a50eb44ace863c05aadc940a7bd15d4d3f498deb81d7fc6
+      - address: /dns/sui-mainnet-ssfn-2.nodeinfra.com/udp/8084
+        peer_id: 1dbc28c105aa7eb9d1d3ac07ae663ea638d91f2b99c076a52bbded296bd3ed5c
+      - address: /dns/sui-mainnet-ssfn-ashburn-na.overclock.run/udp/8084
+        peer_id: 5ff8461ab527a8f241767b268c7aaf24d0312c7b923913dd3c11ee67ef181e45
+      - address: /dns/sui-mainnet-ssfn-dallas-na.overclock.run/udp/8084
+        peer_id: e1a4f40d66f1c89559a195352ba9ff84aec28abab1d3aa1c491901a252acefa6
+      - address: /dns/ssn01.mainnet.sui.rpcpool.com/udp/8084
+        peer_id: fadb7ccb0b7fc99223419176e707f5122fef4ea686eb8e80d1778588bf5a0bcd
+      - address: /dns/ssn02.mainnet.sui.rpcpool.com/udp/8084
+        peer_id: 13783584a90025b87d4604f1991252221e5fd88cab40001642f4b00111ae9b7e
+
+# <sui_compile_sui_tool> adds building of sui-tool binary (does not move it after building)
+sui_compile_sui_tool: false

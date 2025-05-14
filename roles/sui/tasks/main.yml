@@ -1,0 +1,19 @@
+---
+
+- name: Prepare
+  ansible.builtin.include_tasks: prepare.yml
+
+- name: Configure (download genesis, create service, update config)
+  ansible.builtin.include_tasks: configure.yml
+  when: sui_update_configuration
+
+- name: Download pre-compiled
+  ansible.builtin.include_tasks: pre-compiled.yml
+  when: sui_use_pre_compile
+
+- name: Compile
+  ansible.builtin.include_tasks: compile.yml
+  when: not sui_use_pre_compile
+
+- name: Finalize (link and restart)
+  ansible.builtin.include_tasks: finalize.yml

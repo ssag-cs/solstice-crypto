@@ -1,0 +1,8 @@
+---
+- name: Restart Walrus Service
+  ansible.builtin.systemd_service:
+    name: walrusd
+    state: restarted
+    daemon_reload: true
+    enabled: true
+  when: walrus_existing_binary_check.stat.exists # if binary didn't exist, it's a new build, don't start

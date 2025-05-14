@@ -1,0 +1,6 @@
+---
+- name: "Download & Extract"
+  ansible.builtin.unarchive:
+    src: "https://github.com/MystenLabs/sui/releases/download/{{ sui_version }}/sui-{{ sui_version }}-{{ ansible_distribution }}-{{ ansible_architecture }}.tgz"
+    dest: "{{ sui_data_dir }}/releases/{{ sui_version }}"
+    remote_src: true

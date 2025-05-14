@@ -1,0 +1,48 @@
+---
+- name: Install dependencies
+  block:
+    - name: "Ensure node user exists: {{ solana_username }}"
+      ansible.builtin.user:
+        name: "{{ solana_username }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Ensure folder structure exists
+      ansible.builtin.file:
+        path: "{{ item }}"
+        owner: "{{ solana_username }}"
+        group: "{{ solana_username }}"
+        state: "directory"
+        mode: "0755"
+      loop:
+        - "{{ solana_data_dir }}"
+        - "{{ solana_ledger_dir }}"
+        - "{{ solana_accounts_dir }}"
+        - "{{ solana_data_dir }}/releases"
+        - "{{ solana_data_dir }}/git"
+        - "{{ solana_data_dir }}/logs"
+
+    - name: Install apt dependencies
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 86400
+        pkg:
+          - acl
+          - libssl-dev
+          - libudev-dev
+          - pkg-config
+          - zlib1g-dev
+          - llvm
+          - clang
+          - cmake
+          - make
+          - libprotobuf-dev
+          - protobuf-compiler
+
+    - name: Install/Update RUST
+      become: true
+      become_user: "{{ solana_username }}"
+      ansible.builtin.shell: set -o pipefail && bash -ilc 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
+      args:
+        executable: /bin/bash
+      changed_when: true

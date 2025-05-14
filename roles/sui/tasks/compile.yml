@@ -1,0 +1,33 @@
+---
+- name: "Compile sui binaries at version {{ sui_version }}"
+  become: true
+  become_user: "{{ sui_username }}"
+  ansible.builtin.shell: "[ -f ~/.cargo/env ] && source $HOME/.cargo/env && nice -n 19 cargo clean && nice -n 19 cargo build --release --bin sui-node --bin sui {% if sui_compile_sui_tool %}--bin sui-tool{% endif %}"
+  args:
+    chdir: "{{ sui_data_dir }}/git/sui"
+    executable: /bin/bash
+  changed_when: true
+
+- name: "Stage New sui-node and sui Binaries"
+  ansible.builtin.copy:
+    src: "{{ sui_data_dir }}/git/sui/target/release/{{ item }}"
+    dest: "{{ sui_data_dir }}/releases/{{ sui_version }}/{{ item }}"
+    remote_src: true
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    mode: "775"
+  loop:
+    - "sui-node"
+    - "sui"
+
+- name: "Stage New sui-tool Binary"
+  ansible.builtin.copy:
+    src: "{{ sui_data_dir }}/git/sui/target/release/{{ item }}"
+    dest: "{{ sui_data_dir }}/releases/{{ sui_version }}/{{ item }}"
+    remote_src: true
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    mode: "775"
+  loop:
+    - "sui-tool"
+  when: sui_compile_sui_tool

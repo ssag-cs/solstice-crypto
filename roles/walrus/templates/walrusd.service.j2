@@ -1,0 +1,15 @@
+[Unit]
+Description=Walrus Node
+
+[Service]
+User={{ walrus_username }}
+Environment=RUST_BACKTRACE=1
+# The RUST_LOG should be reduced to just 'info' at a later point.
+Environment=RUST_LOG=info,walrus=info
+ExecStart={{ walrus_binary_path }} run --config-path {{ walrus_config_path }}
+Restart=always
+
+LimitNOFILE=4294967296
+
+[Install]
+WantedBy=multi-user.target

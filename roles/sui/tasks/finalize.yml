@@ -1,0 +1,33 @@
+---
+- name: "Update Binary Links"
+  ansible.builtin.file:
+    src: "{{ sui_data_dir }}/releases/{{ sui_version }}/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    mode: "a+x"
+    state: link
+  loop:
+    - "sui-node"
+    - "sui"
+  notify: "Restart suid service"
+
+- name: "Update Binary Links"
+  ansible.builtin.file:
+    src: "{{ sui_data_dir }}/releases/{{ sui_version }}/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    mode: "a+x"
+    state: link
+  loop:
+    - "sui-tool"
+  when: sui_compile_sui_tool
+  notify: "Restart suid service"
+
+- name: "Update folder permissions"
+  ansible.builtin.file:
+    dest: "{{ sui_data_dir }}"
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    recurse: true

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Remove empty snapshots
+find {{ solana_ledger_dir }} -name 'snapshot-*' -size 0 -print -exec rm {} \; || true
+
+export RUST_LOG={{ solana_log_level }}
+export RUST_BACKTRACE=full
+export LimitNOFILE=1000000
+export SOLANA_METRICS_CONFIG="host=https://metrics.solana.com:8086,db=mainnet-beta,u=mainnet-beta_write,p=password"
+
+exec {{ solana_validator_binary_prefix }}-validator \
+    --ledger {{ solana_ledger_dir }} \
+    --accounts {{ solana_accounts_dir }} \
+    --gossip-host {{ solana_external_address }} \
+    --gossip-port {{ solana_gossip_port }} \
+    --dynamic-port-range 8001-8020 \
+    --full-rpc-api \
+    --rpc-bind-address {{ solana_rpc_bind_address }} \
+    --private-rpc \
+    --identity {{ solana_data_dir }}/identity.json \
+    --entrypoint entrypoint.mainnet-beta.solana.com:8001 \
+    --entrypoint entrypoint2.mainnet-beta.solana.com:8001 \
+    --entrypoint entrypoint3.mainnet-beta.solana.com:8001 \
+    --entrypoint entrypoint4.mainnet-beta.solana.com:8001 \
+    --entrypoint entrypoint5.mainnet-beta.solana.com:8001 \
+    --known-validator 7Np41oeYqPefeNQEHSv1UDhYrehxin3NStELsSKCT4K2 \
+    --known-validator GdnSyH3YtwcxFvQrVVJMm1JhTS4QVX7MFsX56uJLUfiZ \
+    --known-validator DE1bawNcRJB9rVm3buyMVfr8mBEoyyu73NBovf2oXJsJ \
+    --known-validator CakcnaRDHka2gXyfbEd2d3xsvkJkqsLw2akB3zsN1D2S \
+    --rpc-port {{ solana_rpc_port }} \
+    --expected-genesis-hash 5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d \
+    --wal-recovery-mode skip_any_corrupted_record \
+    --limit-ledger-size \
+    {% if solana_vote_account_enabled %} --vote-account {{ solana_data_dir }}/vote.json --only-known-rpc {% endif %} \
+    {% if not solana_vote_account_enabled %} --no-voting {% endif %} \
+    {% if solana_jito %} --tip-payment-program-pubkey {{ solana_jito_tip_payment_program_pubkey }} {% endif %} \
+    {% if solana_jito %} --tip-distribution-program-pubkey {{ solana_jito_tip_distribution_program_pubkey }} {% endif %} \
+    {% if solana_jito %} --merkle-root-upload-authority {{ solana_jito_merkle_root_upload_authority }} {% endif %} \
+    {% if solana_jito %} --commission-bps {{ solana_jito_commission_bps }} {% endif %} \
+    {% if solana_jito %} --block-engine-url {{ solana_jito_block_engine_url }} {% endif %} \
+    {% if solana_jito %} --relayer-url {{ solana_jito_shred_receiver }} {% endif %} \
+    --log {{ solana_data_dir }}/logs/solanalog

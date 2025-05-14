@@ -1,0 +1,81 @@
+---
+- name: "Create User {{ sui_username }}"
+  ansible.builtin.user:
+    name: "{{ sui_username }}"
+    shell: /bin/bash
+    state: present
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 900
+
+- name: "Install APT Packages"
+  ansible.builtin.apt:
+    pkg:
+      - curl
+      - git
+      - jq
+      - lz4
+      - unzip
+      - acl
+      - libclang-dev
+      - libssl-dev
+      - libpq-dev
+      - cmake
+      - pkg-config
+      - build-essential
+      - ca-certificates
+      - tzdata
+      - protobuf-compiler
+      - libprotobuf-dev
+      - openssl
+      - clang
+
+- name: "Install RUST"
+  become: true
+  become_user: "{{ sui_username }}"
+  ansible.builtin.shell: "set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y"
+  args:
+    executable: /bin/bash
+  changed_when: true
+
+- name: "Create SUI Data Folder"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    recurse: true
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    state: directory
+    mode: "775"
+  loop:
+    - "{{ sui_data_dir }}"
+    - "{{ sui_data_dir }}/data"
+    - "{{ sui_data_dir }}/git"
+    - "{{ sui_data_dir }}/releases"
+    - "{{ sui_data_dir }}/releases/{{ sui_version }}"
+
+- name: "Set default dir"
+  ansible.builtin.set_fact:
+    sui_data_dir_default: "/home/{{ sui_username }}/.sui"
+
+- name: "Link custom data dir"
+  ansible.builtin.file:
+    src: "{{ sui_data_dir }}"
+    dest: "/home/{{ sui_username }}/.sui"
+    owner: "{{ sui_username }}"
+    group: "{{ sui_username }}"
+    state: link
+  when: sui_data_dir != sui_data_dir_default
+
+- name: "Download Git Repository"
+  become: true
+  become_user: "{{ sui_username }}"
+  ansible.builtin.git:
+    repo: "https://github.com/MystenLabs/sui"
+    dest: "{{ sui_data_dir }}/git/sui"
+    clone: true
+    update: true
+    force: true
+    version: "{{ sui_version }}"
+  when: sui_update_configuration or not sui_use_pre_compile

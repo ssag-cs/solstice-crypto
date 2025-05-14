@@ -1,0 +1,20 @@
+[Unit]
+Description=Solana
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User={{ solana_username }}
+LimitNOFILE=1000000
+LogRateLimitIntervalSec=0
+ExecStart={{ solana_data_dir }}/startup.sh
+
+# Command to gracefully stop the Solana validator
+ExecStop={{ solana_validator_binary_prefix }}-validator exit
+TimeoutStopSec=300
+
+[Install]
+WantedBy=multi-user.target

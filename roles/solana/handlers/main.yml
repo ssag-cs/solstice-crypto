@@ -1,0 +1,22 @@
+---
+###################
+# Handlers
+###################
+- name: Stop solanad
+  ansible.builtin.systemd:
+    state: stopped
+    name: solanad
+
+- name: Start solanad
+  ansible.builtin.systemd:
+    state: started
+    daemon_reload: true
+    enabled: true
+    name: solanad
+
+- name: Logrotate reload
+  ansible.builtin.systemd:
+    state: started
+    daemon_reload: true
+    enabled: true
+    name: logrotate

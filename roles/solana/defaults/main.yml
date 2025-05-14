@@ -1,0 +1,81 @@
+---
+# <solana_username> is the non-root user under which daemon will operate
+solana_username: solana
+
+# <solana_force_update> force the installer to resinstall the same version and overwrite the existing configuration
+solana_force_update: false
+
+# <solana_update_deps> force the installer to update apt dependencies and rust (always runs first install)
+solana_update_deps: false
+
+# <solana_update_config> force the installer to update config files (always runs first install)
+solana_update_config: false
+
+# <solana_skip_start> when true the service will not start the service at the end of the script
+solana_skip_start: false
+
+# <solana_vote_account_enabled> when set to true the node will attempt to vote which requires a vote account setup at {{ solana_data_dir }}/vote.json
+solana_vote_account_enabled: false
+
+# <solana_network> the network to connect to (mainnet, testnet or pyth)
+solana_network: "mainnet"
+
+# <solana_install_cli> whether to install the solana cli or not
+solana_install_cli: false
+
+# <solana_git_url> the git repo to use when building the solana validator binary
+solana_git_url: "https://github.com/anza-xyz/agave.git"
+
+# <solana_version> the version tag or commit hash to build
+solana_version: "v2.1.14"
+
+# <solana_data_dir> the location where data will be stored
+solana_data_dir: "/home/{{ solana_username }}/.solana"
+
+# <solana_ledger_dir> the location where ledger information will be stored
+solana_ledger_dir: "{{ solana_data_dir }}/data/ledger"
+
+# <solana_accounts_dir> the location where account information will be stored
+solana_accounts_dir: "{{ solana_data_dir }}/data/accounts"
+
+# <solana_validator_binary_prefix> the prefix of the validator binary (agave for agave-validator, solana for solana-validator)
+solana_validator_binary_prefix: "agave"
+
+# <solana_external_address> the external facing ip address for peers to connect
+solana_external_address: "{{ ansible_host }}"
+
+# <solana_gossip_port> the gossip port to be used
+solana_gossip_port: 8000
+
+# <solana_rpc_port> the rpc port to be used
+solana_rpc_port: 8899
+
+# <solana_rpc_bind_address> whether to bind to local host or allow external access (0.0.0.0)
+solana_rpc_bind_address: 127.0.0.1
+
+# <solana_log_level> the level of logs to write to file (warning: info is very verbose and will fill your disk quickly)
+solana_log_level: "warn"
+
+# <solana_use_jito> set true if you're using jito (don't forget to set the git url and all solana_jito_ varaiables)
+solana_jito: false
+
+# <solana_jito_tip_payment_program_pubkey> mainnet T1pyyaTNZsKv2WcRAB8oVnk93mLJw2XzjtVYqCsaHqt, testnet DCN82qDxJAQuSqHhv2BJuAgi41SPeKZB5ioBCTMNDrCC (https://jito-foundation.gitbook.io/mev/mev-payment-and-distribution/on-chain-addresses)
+solana_jito_tip_payment_program_pubkey: T1pyyaTNZsKv2WcRAB8oVnk93mLJw2XzjtVYqCsaHqt
+
+# <solana_jito_tip_distribution_program_pubkey> mainnet 4R3gSG8BpU4t19KYj8CfnbtRpnT8gtk4dvTHxVRwc2r7, testnet F2Zu7QZiTYUhPd7u9ukRVwxh7B71oA3NMJcHuCHc29P2 (https://jito-foundation.gitbook.io/mev/mev-payment-and-distribution/on-chain-addresses)
+solana_jito_tip_distribution_program_pubkey: 4R3gSG8BpU4t19KYj8CfnbtRpnT8gtk4dvTHxVRwc2r7
+
+# <solana_jito_merkle_root_upload_authority> applies to both mainnet and testnet for automated distribution (https://jito-foundation.gitbook.io/mev/mev-payment-and-distribution/on-chain-addresses)
+solana_jito_merkle_root_upload_authority: GZctHpWXmsZC1YHACTGGcHhYxjdRqQvTpYkb9LMvxDib
+
+# <solana_jito_commission_bps> the commission in bips
+solana_jito_commission_bps: 1000
+
+# <solana_jito_relayer_url> jito relayer url, currently set to new york (https://docs.jito.wtf/en/latest/lowlatencytxnsend.html#api)
+solana_jito_relayer_url: http://ny.mainnet.relayer.jito.wtf:8100
+
+# <solana_jito_block_engine_url> jito block engine url, currently set to new york (https://docs.jito.wtf/en/latest/lowlatencytxnsend.html#api)
+solana_jito_block_engine_url: https://ny.mainnet.block-engine.jito.wtf
+
+# <solana_jito_shred_receiver> jito shred receiver url, currently set to new york (https://docs.jito.wtf/en/latest/lowlatencytxnsend.html#api)
+solana_jito_shred_receiver: 141.98.216.96:1002
