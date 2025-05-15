@@ -1,0 +1,34 @@
+{
+ "collection_info": {
+  "namespace": "solstice",
+  "name": "validator",
+  "version": "1.0.0",
+  "authors": [
+   "ssag-cs"
+  ],
+  "readme": "README.md",
+  "tags": [
+   "blockchain",
+   "solana",
+   "avalanche"
+  ],
+  "description": "The Ansible Collection contains roles to manage blockchain infrastructure.\n",
+  "license": [],
+  "license_file": "LICENSE",
+  "dependencies": {
+   "community.general": ">=4.2.0"
+  },
+  "repository": "https://github.com/ssag-cs/solstice-crypto",
+  "documentation": null,
+  "homepage": "https://solsticestaking.io",
+  "issues": "https://github.com/ssag-cs/solstice-crypto.git/issues"
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "9d4eba938567684b4fc1fd4a4c940214b200ca1b7cf4d23b1b6351ba25a9ade7",
+  "format": 1
+ },
+ "format": 1
+}
