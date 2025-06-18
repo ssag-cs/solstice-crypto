@@ -38,6 +38,7 @@
           - make
           - libprotobuf-dev
           - protobuf-compiler
+          - build-essential
 
     - name: Install/Update RUST
       become: true
