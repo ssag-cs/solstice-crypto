@@ -13,7 +13,7 @@ export LimitNOFILE=1000000
 
 exec {{ solana_validator_binary_prefix }}-validator \
     --ledger {{ solana_ledger_dir }} \
-    --gossip-host {{ solana_external_address }} \
+    --bind-address {{ solana_external_address }} \
     --gossip-port {{ solana_gossip_port }} \
     --full-rpc-api \
     --rpc-bind-address {{ solana_rpc_bind_address }} \

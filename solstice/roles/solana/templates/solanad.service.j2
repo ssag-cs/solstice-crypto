@@ -8,6 +8,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User={{ solana_username }}
+LimitMEMLOCK=2000000000
 LimitNOFILE=1000000
 LogRateLimitIntervalSec=0
 ExecStart={{ solana_data_dir }}/startup.sh
@@ -17,4 +18,4 @@ ExecStop={{ solana_validator_binary_prefix }}-validator exit
 TimeoutStopSec=300
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target. 

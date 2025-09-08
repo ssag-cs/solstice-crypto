@@ -15,9 +15,9 @@ export SOLANA_METRICS_CONFIG="host=https://metrics.solana.com:8086,db=mainnet-be
 exec {{ solana_validator_binary_prefix }}-validator \
     --ledger {{ solana_ledger_dir }} \
     --accounts {{ solana_accounts_dir }} \
-    --gossip-host {{ solana_external_address }} \
+    --bind-address {{ solana_external_address }} \
     --gossip-port {{ solana_gossip_port }} \
-    --dynamic-port-range 8001-8020 \
+    --dynamic-port-range 8001-8030 \
     --full-rpc-api \
     --rpc-bind-address {{ solana_rpc_bind_address }} \
     --private-rpc \
