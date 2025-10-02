@@ -8,6 +8,7 @@
         repo: "{{ solana_git_url }}"
         dest: "{{ solana_data_dir }}/git"
         clone: true
+        force: true
         update: true
         version: "{{ solana_version }}"
 
