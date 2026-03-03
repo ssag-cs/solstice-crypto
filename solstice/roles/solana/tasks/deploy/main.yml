@@ -28,7 +28,7 @@
         state: absent
       loop:
         - "{{ solana_validator_binary_prefix }}-validator"
-        # - "{{ solana_validator_binary_prefix }}-ledger-tool"
+# - "{{ solana_validator_binary_prefix }}-ledger-tool"
         - solana
         - solana-keygen
 
@@ -41,7 +41,7 @@
         state: link
       loop:
         - "{{ solana_validator_binary_prefix }}-validator"
-        # - "{{ solana_validator_binary_prefix }}-ledger-tool"
+# - "{{ solana_validator_binary_prefix }}-ledger-tool"
         - solana
         - solana-keygen
 
