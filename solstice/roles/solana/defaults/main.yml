@@ -79,3 +79,6 @@ solana_jito_block_engine_url: https://ny.mainnet.block-engine.jito.wtf
 
 # <solana_jito_shred_receiver> jito shred receiver url, currently set to new york (https://docs.jito.wtf/en/latest/lowlatencytxnsend.html#api)
 solana_jito_shred_receiver: 141.98.216.96:1002
+
+# Skip Build Flag in case compiling goes wrong
+solana_skip_build: false

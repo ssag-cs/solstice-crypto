@@ -20,6 +20,7 @@
       when: solana_install_cli
 
     - name: Build binaries
+      when: not solana_skip_build
       become: true
       become_user: "{{ solana_username }}"
       ansible.builtin.command: bash -ilc "{{ solana_data_dir }}/git/scripts/cargo-install-all.sh ."
