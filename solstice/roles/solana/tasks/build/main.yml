@@ -19,14 +19,14 @@
       changed_when: true
       when: solana_install_cli
 
-    - name: Patch cargo-install-all.sh – cargo-test-sbf mit --force installieren
-      when: not solana_skip_build
-      become: true
-      become_user: "{{ solana_username }}"
-      ansible.builtin.replace:
-        path: "{{ solana_data_dir }}/git/scripts/cargo-install-all.sh"
-        regexp: 'install --locked cargo-test-sbf --root'
-        replace: 'install --locked cargo-test-sbf --force --root'
+    #- name: Patch cargo-install-all.sh – cargo-test-sbf mit --force installieren
+    #  when: not solana_skip_build
+    #  become: true
+    #  become_user: "{{ solana_username }}"
+    #  ansible.builtin.replace:
+    #    path: "{{ solana_data_dir }}/git/scripts/cargo-install-all.sh"
+    #    regexp: 'install --locked cargo-test-sbf --root'
+    #    replace: 'install --locked cargo-test-sbf --force --root'
 
     - name: Build binaries
       when: not solana_skip_build
